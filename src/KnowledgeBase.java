@@ -1,26 +1,19 @@
 import org.jpl7.*;
 
 public class KnowledgeBase {
-    private boolean loadNewData() {
 
-       return true;
-    }
-
-    public void init() {
+    public void init() throws KnowledgeBaseError {
         Query consultQuery = new Query("consult('src/dataBase/store.pl')");
         if( consultQuery.hasSolution()) {
             System.out.println("Knowledge base initialized.");
         } else {
-            System.out.println("Failed to initialize Knowledge base!");
-            // TODO: Trow exeption
+            throw new KnowledgeBaseError("Failed to initialize Knowledge base!");
         }
+    }
 
-        System.out.print("Loading new Data...");
-        if (loadNewData()) {
-            System.out.println("Done.");
-        }else {
-            System.out.println("Failed.");
-            // TODO: Trow exeption
+    public static class KnowledgeBaseError extends Exception {
+        public KnowledgeBaseError(String message) {
+            super(message);
         }
     }
 }
