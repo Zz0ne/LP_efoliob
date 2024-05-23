@@ -6,7 +6,7 @@ item(4, 'Crystal of Clairvoyance', 'crystals', 15.0, 40).
 item(5, 'Amulet of Protection', 'amulets', 25.0, 25).
 item(6, 'Standard Wand', 'wands', 20.0, 100).
 item(7, 'Love Potion', 'potions', 10.0, 50).
-item(8, 'Advanced Spellbook', 'enchanted_Books', 15.0, 30).
+item(8, 'Advanced Spellbook', 'enchanted_books', 15.0, 30).
 item(9, 'Crystal of Magic Vision', 'crystals', 30.0, 20).
 item(10, 'Flying Broomstick', 'accessories', 50.0, 10).
 item(11, 'Enchanted Scroll', 'scrolls', 8.0, 50).
@@ -43,7 +43,7 @@ loyalty_discount(5, 0.3).
 shipping_cost('Aveiro', 5.0).
 shipping_cost('Lisboa', 7.0).
 shipping_cost('Porto', 10.0).
-shipping_cost('Braga', 2,5).
+shipping_cost('Braga', 2.5).
 shipping_cost('Coimbra', 5.0).
 shipping_cost('Faro', 15.0).
 shipping_cost('Viseu', 3.0).

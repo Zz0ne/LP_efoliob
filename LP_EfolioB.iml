@@ -7,12 +7,22 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar:///lib/java/jpl.jar!/" />
+          <root url="jar:///usr/lib/swi-prolog/lib/jpl.jar!/" />
         </CLASSES>
         <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="libjpl.so">
+        <CLASSES />
+        <JAVADOC />
+        <NATIVE>
+          <root url="file:///usr/lib/swi-prolog/lib/x86_64-linux" />
+        </NATIVE>
         <SOURCES />
       </library>
     </orderEntry>
