@@ -3,7 +3,7 @@ public class Item {
     private final String name;
     private final String category;
     private final float price;
-    private int stock;
+    private int quantity;
 
     /**
      * Construtor para criar um novo item.
@@ -18,7 +18,15 @@ public class Item {
         this.name = name;
         this.category = category;
         this.price = price;
-        this.stock = stock;
+        this.quantity = stock;
+    }
+
+    public Item(Item other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.category = other.category;
+        this.price = other.price;
+        this.quantity = other.quantity;
     }
 
     /**
@@ -29,12 +37,24 @@ public class Item {
         return id;
     }
 
-    public void decrementStock(int value) throws Exception {
-        if (this.stock - value < 0) {
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public void decrementQuantity(int value) throws Exception {
+        if (this.quantity - value < 0) {
             throw new Exception("Not enough stock!");
         }
 
-        this.stock -= value;
+        this.quantity -= value;
+    }
+
+    public void incrementQuantity(int value) {
+        this.quantity += value;
     }
 
     /**
@@ -43,7 +63,7 @@ public class Item {
      */
     @Override
     public String toString() {
-        return String.format("%-3d %-25s %-17s %.2f€", id, name, category, price);    }
+        return String.format("%-3d %-25s %-17s %.2f€  -------- Quantity: %d", id, name, category, price, quantity);    }
 
 
     // Os métodos abaixo foram criados para esta classe ser usada num hashmap na classe ShoppingCart
