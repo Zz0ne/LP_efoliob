@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Store {
-    static KnowledgeBase kb = new KnowledgeBase();
     static ArrayList<Client> clients = null;
     static ArrayList<Item> items = null;
     static Scanner userInput;
@@ -19,12 +18,12 @@ public class Store {
 
     public static void init() {
         try {
-            kb.init();
+            KnowledgeBase.init();
         } catch (KnowledgeBase.KnowledgeBaseError e) {
             System.out.println(e.getMessage());
         }
         userInput = new Scanner(System.in);
-        clients = kb.getClients();
+        clients = KnowledgeBase.getClients();
     }
 
     public static Client selectClient() {
@@ -41,7 +40,7 @@ public class Store {
     }
 
     public static Item selectItem() throws Exception {
-        items = kb.getItems();
+        items = KnowledgeBase.getItems();
 
         for (Item i : items)
             System.out.println(i);
@@ -124,9 +123,9 @@ public class Store {
         char choice = userInput.next().charAt(0);
         while (true) {
             if (choice == 'y') {
-                kb.addPurchaseHistory(client.getId(), totalItemPrice, categoryDiscount, loyaltyDiscount, shipping, finalPrice);
+                PurchaseHistory.add(client.getId(), totalItemPrice, categoryDiscount, loyaltyDiscount, shipping, finalPrice);
                 for(Item i: items)
-                    kb.updateStock(i);
+                    KnowledgeBase.updateStock(i);
                 break;
             }
             else if (choice == 'n')

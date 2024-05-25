@@ -1,13 +1,11 @@
 import org.jpl7.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class KnowledgeBase {
 
-    public void init() throws KnowledgeBaseError {
+    public static void init() throws KnowledgeBaseError {
         Query consultQuery = new Query("consult('backend/dataBase/store.pl')");
         if( consultQuery.hasSolution()) {
             System.out.println("Knowledge base initialized.");
@@ -16,7 +14,31 @@ public class KnowledgeBase {
         }
     }
 
-    public ArrayList<Client> getClients() {
+    public static ArrayList<Map<String, Term>>fetchQuery(String queryStr) throws KnowledgeBaseError {
+       Query query  = new Query(queryStr);
+
+       ArrayList<Map<String, Term>> results = new ArrayList<>();
+
+       if(!query.hasSolution()) {
+          throw new KnowledgeBaseError("Failed to query knowledge base!");
+       }
+
+       while(query.hasMoreSolutions()) {
+           results.add(query.nextSolution());
+       }
+
+       return results;
+    }
+
+    public static void addQuery(String queryStr) throws KnowledgeBaseError {
+        Query query  = new Query(queryStr);
+
+        if(!query.hasSolution()) {
+            throw new KnowledgeBaseError("Failed to query knowledge base!");
+        }
+    }
+
+    public static ArrayList<Client> getClients() {
         ArrayList<Client> clients = new ArrayList<>();
 
         Query retrieveClients = new Query("client(Id, Name, District, Loyalty)");
@@ -41,7 +63,7 @@ public class KnowledgeBase {
         return clients;
     }
 
-    public ArrayList<Item> getItems() {
+    public static ArrayList<Item> getItems() {
         ArrayList<Item> items = new ArrayList<>();
 
         Query retrieveItems = new Query("item(Id, Name, Category, Price, Stock)");
@@ -61,25 +83,8 @@ public class KnowledgeBase {
         return items;
     }
 
-    public void addPurchaseHistory(int id ,float totalPrice, float catDisc, float loyalDisc, float shipping, float finPrice) {
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedDate = currentDate.format(formatter);
 
-        String prologQuery = String.format(
-                "assertz(history(%d, '%s', %f, %f, %f, %f, %f))",
-                id, formattedDate, totalPrice, catDisc, loyalDisc, shipping, finPrice
-        );
-
-        Query addPurchase = new Query(prologQuery);
-        if (addPurchase.hasSolution()) {
-            System.out.println("Purchase history added successfully.");
-        } else {
-            System.out.println("Failed to add purchase history.");
-        }
-    }
-
-    public void updateStock(Item item) {
+    public static void updateStock(Item item) {
         String prologQuery = String.format(
                 "update_stock(%d, %d)",
                 item.getId(), item.getQuantity()
