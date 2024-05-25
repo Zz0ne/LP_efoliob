@@ -37,6 +37,10 @@ public class Item {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

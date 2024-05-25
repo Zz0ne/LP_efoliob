@@ -1,0 +1,12 @@
+lib: [
+  "_build/install/default/lib/backend/META"
+  "_build/install/default/lib/backend/dune-package"
+  "_build/install/default/lib/backend/opam"
+]
+bin: [
+  "_build/install/default/bin/categoryDiscount"
+  "_build/install/default/bin/finalPrice"
+  "_build/install/default/bin/loyaltyDiscount"
+  "_build/install/default/bin/shippingCost"
+  "_build/install/default/bin/totalPrice"
+]

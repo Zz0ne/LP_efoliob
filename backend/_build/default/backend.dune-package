@@ -1,0 +1,6 @@
+(lang dune 3.15)
+(name backend)
+(sections (lib .) (bin ../../bin))
+(files
+ (lib (META dune-package opam))
+ (bin (categoryDiscount finalPrice loyaltyDiscount shippingCost totalPrice)))

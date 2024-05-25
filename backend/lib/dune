@@ -1,0 +1,15 @@
+(library
+ (name dbParser)
+ (libraries str)
+ (modules DbParser)
+ )
+
+(library
+ (name utils)
+ (libraries dbParser)
+ (modules Utils)
+ )
+
+(env
+(dev
+(flags (:standard -w -33-45))))

@@ -1,3 +1,10 @@
+:- dynamic history/7.
+:- dynamic item/5.
+
+update_stock(Id, NewStock) :-
+    item(Id, Name, Category, Price, OldStock),
+    retract(item(Id, Name, Category, Price, OldStock)),
+    assertz(item(Id, Name, Category, Price, NewStock)).
 
 % Item em inventário
 item(1, 'Potion of Healing', 'potions', 10.0, 50).

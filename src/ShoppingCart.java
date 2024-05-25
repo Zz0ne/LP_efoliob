@@ -21,6 +21,10 @@ public class ShoppingCart {
         }
     }
 
+    public ArrayList<Item> getItems() {
+       return items;
+    }
+
     /**
      * Retorna uma representação textual do conteúdo do carrinho de compras.
      * @return Uma string detalhando os itens e suas quantidades no carrinho.
