@@ -10,9 +10,33 @@ public class Store {
         init();
 
         while (true) {
-            Client client = getClient();
-            browseShop(client);
-            checkout(client);
+
+            System.out.println("Welcome:");
+            System.out.println("0 - Quit.");
+            System.out.println("1 - Purchase Goods.");
+            System.out.println("2 - Purchase History.");
+
+            int choice = userInput.nextInt();
+
+            switch (choice) {
+                case 0:
+                    System.exit(0);
+                case 1:
+                    Client client = getClient();
+                    browseShop(client);
+                    checkout(client);
+                    break;
+                case 2:
+                    ArrayList<String> results = fetchHistory();
+                    System.out.println("Purchase History:");
+                    for (String item : results) {
+                        System.out.println(item);
+                    }
+                    System.out.println();
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+            }
         }
     }
 
@@ -132,6 +156,43 @@ public class Store {
                 break;
             else
                 System.out.println("Invalid choice");
+        }
+    }
+
+    public static ArrayList<String> fetchHistory() {
+        System.out.println("1 - By date.");
+        System.out.println("2 - By client.");
+        System.out.println("3 - By district.");
+        System.out.println("4 - Totals By district.");
+        System.out.println("5 - Totals By date.");
+
+        int choice = userInput.nextInt();
+
+        while (true) {
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter date(dd/mm/yyyy): ");
+                    String date = userInput.next();
+                    return PurchaseHistory.getByDate(date);
+                case 2:
+                    System.out.print("Enter client id: ");
+                    int clientId = userInput.nextInt();
+                    return PurchaseHistory.getByClient(clientId);
+                case 3:
+                    System.out.print("Enter district: ");
+                    String district = userInput.next();
+                    return PurchaseHistory.getByDistrict(district);
+                case 4:
+                    System.out.print("Enter district.");
+                    String districtId = userInput.next();
+                    return PurchaseHistory.getTotalsByDistrict(districtId);
+                case 5:
+                    System.out.print("Enter date(dd/mm/yyyy): ");
+                    String _date = userInput.next();
+                    return PurchaseHistory.getTotalsByDate(_date);
+                default:
+                    System.out.println("Invalid choice");
+            }
         }
     }
 }

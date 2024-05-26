@@ -6,6 +6,10 @@ update_stock(Id, NewStock) :-
     retract(item(Id, Name, Category, Price, OldStock)),
     assertz(item(Id, Name, Category, Price, NewStock)).
 
+purchase_history_by_district(District, ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) :-
+    client(ClientId, _ClientName, District, _LoyaltyYears),
+    history(ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice).
+
 % Item em inventário
 item(1, 'Potion of Healing', 'potions', 10.0, 50).
 item(2, 'Wand of Fireball', 'wands', 20.0, 30).
