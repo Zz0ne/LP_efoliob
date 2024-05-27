@@ -1,6 +1,9 @@
+import org.jpl7.Term;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PurchaseHistory {
     public static void add(int id ,float totalPrice, float catDisc, float loyalDisc, float shipping, float finPrice) {
@@ -104,16 +107,50 @@ public class PurchaseHistory {
         return purchaseHistory;
     }
 
-    public static ArrayList<String> getTotalsByDistrict(String district) {
-        ArrayList<String> purchaseHistory = new ArrayList<>();
+    public static String getTotalsByDistrict(String district) {
+        String queryStr = String.format(
+                "purchase_history_totals_by_district('%s', TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum)", district
+        );
 
-        return purchaseHistory;
+        try {
+            var arrResp = KnowledgeBase.fetchQuery(queryStr);
+            Map<String, Term> resp = arrResp.get(0);
+            float totalSum = resp.get("TotalSum").floatValue();
+            float catDiscSum = resp.get("CatDiscSum").floatValue();
+            float loyalDiscSum = resp.get("LoyalDiscSum").floatValue();
+            float shippingSum = resp.get("ShippingSum").floatValue();
+            float finPriceSum = resp.get("FinPriceSum").floatValue();
+
+            return String.format(
+                    "Total Sum: %.2f\nCategory Discount Sum: %.2f\nLoyalty Discount Sum: %.2f\nShipping Sum: %.2f\nFinal Price Sum: %.2f",
+                    totalSum, catDiscSum, loyalDiscSum, shippingSum, finPriceSum
+            );
+        } catch (KnowledgeBase.KnowledgeBaseError e) {
+            return "No results found.";
+        }
     }
 
-    public static ArrayList<String> getTotalsByDate(String date) {
-        ArrayList<String> purchaseHistory = new ArrayList<>();
+    public static String getTotalsByDate(String date) {
+        String queryStr = String.format(
+                "purchase_history_totals_by_date('%s', TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum)", date
+        );
 
-        return purchaseHistory;
+        try {
+            var arrResp = KnowledgeBase.fetchQuery(queryStr);
+            Map<String, Term> resp = arrResp.get(0);
+            float totalSum = resp.get("TotalSum").floatValue();
+            float catDiscSum = resp.get("CatDiscSum").floatValue();
+            float loyalDiscSum = resp.get("LoyalDiscSum").floatValue();
+            float shippingSum = resp.get("ShippingSum").floatValue();
+            float finPriceSum = resp.get("FinPriceSum").floatValue();
+
+            return String.format(
+                    "Total Sum: %.2f\nCategory Discount Sum: %.2f\nLoyalty Discount Sum: %.2f\nShipping Sum: %.2f\nFinal Price Sum: %.2f",
+                    totalSum, catDiscSum, loyalDiscSum, shippingSum, finPriceSum
+            );
+        } catch (KnowledgeBase.KnowledgeBaseError e) {
+            return "No results found.";
+        }
     }
 
     public static String getMostDiscountedDistrict() {

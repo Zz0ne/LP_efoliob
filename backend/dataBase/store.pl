@@ -1,5 +1,6 @@
 :- dynamic history/7.
 :- dynamic item/5.
+:- dynamic discount/2.
 
 update_stock(Id, NewStock) :-
     item(Id, Name, Category, Price, OldStock),
@@ -9,6 +10,28 @@ update_stock(Id, NewStock) :-
 purchase_history_by_district(District, ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) :-
     client(ClientId, _ClientName, District, _LoyaltyYears),
     history(ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice).
+
+purchase_history_totals_by_district(District, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
+    findall((TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
+            purchase_history_by_district(District, _ClientId, _Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
+            Results),
+    sum_values(Results, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum).
+
+purchase_history_totals_by_date(Date, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
+    findall((TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
+            history(_, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
+            Results),
+    sum_values(Results, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum).
+
+sum_values([], 0, 0, 0, 0, 0).
+sum_values([(TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) | Tail],
+           TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
+    sum_values(Tail, TotalSumRest, CatDiscSumRest, LoyalDiscSumRest, ShippingSumRest, FinPriceSumRest),
+    TotalSum is TotalSumRest + TotalPrice,
+    CatDiscSum is CatDiscSumRest + CatDisc,
+    LoyalDiscSum is LoyalDiscSumRest + LoyalDisc,
+    ShippingSum is ShippingSumRest + Shipping,
+    FinPriceSum is FinPriceSumRest + FinPrice.
 
 % Item em inventário
 item(1, 'Potion of Healing', 'potions', 10.0, 50).

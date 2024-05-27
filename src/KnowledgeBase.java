@@ -63,25 +63,6 @@ public class KnowledgeBase {
         return clients;
     }
 
-    public static ArrayList<Item> getItems() {
-        ArrayList<Item> items = new ArrayList<>();
-
-        Query retrieveItems = new Query("item(Id, Name, Category, Price, Stock)");
-
-        while(retrieveItems.hasMoreSolutions()) {
-            Map<String, Term> solution = retrieveItems.nextSolution();
-
-            int id = solution.get("Id").intValue();
-            String name = solution.get("Name").toString();
-            String category = solution.get("Category").toString();
-            float price = solution.get("Price").floatValue();
-            int stock = solution.get("Stock").intValue();
-
-            Item item = new Item(id, name, category, price, stock);
-            items.add(item);
-        }
-        return items;
-    }
 
 
     public static void updateStock(Item item) {

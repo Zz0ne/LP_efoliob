@@ -64,7 +64,7 @@ public class Store {
     }
 
     public static Item selectItem() throws Exception {
-        items = KnowledgeBase.getItems();
+        items = InventoryManagement.getItems();
 
         for (Item i : items)
             System.out.println(i);
@@ -183,13 +183,17 @@ public class Store {
                     String district = userInput.next();
                     return PurchaseHistory.getByDistrict(district);
                 case 4:
-                    System.out.print("Enter district.");
+                    System.out.print("Enter district: ");
                     String districtId = userInput.next();
-                    return PurchaseHistory.getTotalsByDistrict(districtId);
+                    var resultDist = new ArrayList<String>();
+                    resultDist.add(PurchaseHistory.getTotalsByDistrict(districtId));
+                    return resultDist;
                 case 5:
                     System.out.print("Enter date(dd/mm/yyyy): ");
                     String _date = userInput.next();
-                    return PurchaseHistory.getTotalsByDate(_date);
+                    var resultDate = new ArrayList<String>();
+                    resultDate.add(PurchaseHistory.getTotalsByDate(_date));
+                    return resultDate;
                 default:
                     System.out.println("Invalid choice");
             }
