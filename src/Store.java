@@ -15,6 +15,7 @@ public class Store {
             System.out.println("0 - Quit.");
             System.out.println("1 - Purchase Goods.");
             System.out.println("2 - Purchase History.");
+            System.out.println("3 - Inventory Management.");
 
             int choice = userInput.nextInt();
 
@@ -25,13 +26,14 @@ public class Store {
                     Client client = getClient();
                     browseShop(client);
                     checkout(client);
+                    System.out.println();
                     break;
                 case 2:
-                    ArrayList<String> results = fetchHistory();
-                    System.out.println("Purchase History:");
-                    for (String item : results) {
-                        System.out.println(item);
-                    }
+                    fetchHistory();
+                    System.out.println();
+                    break;
+                case 3:
+                    manageInventory();
                     System.out.println();
                     break;
                 default:
@@ -141,7 +143,6 @@ public class Store {
         System.out.printf("Shipping ------------------------------------------------------------%.2f€\n", shipping);
         System.out.printf("Final price ---------------------------------------------------------%.2f€\n", finalPrice);
         System.out.println();
-        System.out.println();
         System.out.println("Buy? (y/n): ");
 
         char choice = userInput.next().charAt(0);
@@ -159,44 +160,122 @@ public class Store {
         }
     }
 
-    public static ArrayList<String> fetchHistory() {
-        System.out.println("1 - By date.");
-        System.out.println("2 - By client.");
-        System.out.println("3 - By district.");
-        System.out.println("4 - Totals By district.");
-        System.out.println("5 - Totals By date.");
-
-        int choice = userInput.nextInt();
+    public static void fetchHistory() {
 
         while (true) {
+            System.out.println("Purchase History:");
+            System.out.println("0 - Go back.");
+            System.out.println("1 - By date.");
+            System.out.println("2 - By client.");
+            System.out.println("3 - By district.");
+            System.out.println("4 - Totals By district.");
+            System.out.println("5 - Totals By date.");
+            System.out.print("Choice: ");
+
+            int choice = userInput.nextInt();
+            System.out.println();
+
+            ArrayList<String> results = new ArrayList<>();
             switch (choice) {
+                case 0:
+                    return ;
                 case 1:
                     System.out.print("Enter date(dd/mm/yyyy): ");
                     String date = userInput.next();
-                    return PurchaseHistory.getByDate(date);
+                    results = PurchaseHistory.getByDate(date);
+                    break;
                 case 2:
                     System.out.print("Enter client id: ");
                     int clientId = userInput.nextInt();
-                    return PurchaseHistory.getByClient(clientId);
+                    results = PurchaseHistory.getByClient(clientId);
+                    break;
                 case 3:
                     System.out.print("Enter district: ");
                     String district = userInput.next();
-                    return PurchaseHistory.getByDistrict(district);
+                    results =  PurchaseHistory.getByDistrict(district);
+                    break;
                 case 4:
                     System.out.print("Enter district: ");
                     String districtId = userInput.next();
-                    var resultDist = new ArrayList<String>();
-                    resultDist.add(PurchaseHistory.getTotalsByDistrict(districtId));
-                    return resultDist;
+                    results.add(PurchaseHistory.getTotalsByDistrict(districtId));
+                    break;
                 case 5:
                     System.out.print("Enter date(dd/mm/yyyy): ");
                     String _date = userInput.next();
-                    var resultDate = new ArrayList<String>();
-                    resultDate.add(PurchaseHistory.getTotalsByDate(_date));
-                    return resultDate;
+                    results.add(PurchaseHistory.getTotalsByDate(_date));
+                    break;
                 default:
                     System.out.println("Invalid choice");
+                    continue;
             }
+
+            System.out.println();
+            for (String item : results) {
+                System.out.println(item);
+            }
+            System.out.println();
         }
+    }
+
+    public static void manageInventory() {
+        System.out.println("InventoryManagement:");
+        System.out.println("0 - Go back.");
+        System.out.println("1 - Check items.");
+        System.out.println("2 - Check items by category.");
+        System.out.println("3 - Check categories.");
+        System.out.println("4 - Add category.");
+        System.out.println("5 - Remove category.");
+        System.out.println("6 - Edit category.");
+        System.out.println("7 - Add item.");
+        System.out.println("8 - Remove item.");
+        System.out.println("9 - Edit item.");
+
+        int choice = userInput.nextInt();
+
+
+        switch (choice) {
+            case 0:
+                return;
+            case 1:
+                var itemList = InventoryManagement.getItems();
+                for (var item: itemList)
+                    System.out.println(item);
+                break;
+            case 2:
+                System.out.print("Insert category: ");
+                String category = userInput.next();
+                var itemByCatList = InventoryManagement.getItemsByCategory(category);
+                for (Item item: itemByCatList)
+                    System.out.println(item);
+                break;
+            case 3:
+                var categoryList = InventoryManagement.getCategories();
+                for (var cat: categoryList)
+                    System.out.println(cat);
+                break;
+            case 4:
+                System.out.print("Enter new category name: ");
+                String catName = userInput.next();
+                System.out.print("Enter category discount: ");
+                float discount = userInput.nextFloat();
+                InventoryManagement.addCategory(catName, discount);
+                break;
+            case 5:
+                System.out.print("Enter category to remove: ");
+                String removeCatName = userInput.next();
+                InventoryManagement.removeCategory(removeCatName);
+                break;
+            case 6:
+                System.out.print("Enter category name: ");
+                String catToEdit = userInput.next();
+                System.out.print("Enter new discount: ");
+                float newDiscount = userInput.nextFloat();
+                InventoryManagement.editCategory(catToEdit, newDiscount);
+                break;
+            case 7:
+
+
+        }
+
     }
 }
