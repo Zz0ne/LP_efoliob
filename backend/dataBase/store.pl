@@ -33,6 +33,11 @@ sum_values([(TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) | Tail],
     ShippingSum is ShippingSumRest + Shipping,
     FinPriceSum is FinPriceSumRest + FinPrice.
 
+next_item_id(NextID) :-
+    findall(ID, item(ID, _, _, _, _), IDs),
+    max_list(IDs, MaxID),
+    NextID is MaxID + 1.
+
 % Item em inventário
 item(1, 'Potion of Healing', 'potions', 10.0, 50).
 item(2, 'Wand of Fireball', 'wands', 20.0, 30).

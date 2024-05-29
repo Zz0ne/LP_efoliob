@@ -1,3 +1,4 @@
+import jdk.jfr.Category;
 import org.jpl7.Term;
 
 import java.util.ArrayList;
@@ -54,8 +55,8 @@ public class InventoryManagement {
         return items;
     }
 
-    public static ArrayList<Map<String, Float>> getCategories() {
-        ArrayList<Map<String, Float>> categories = new ArrayList<>();
+    public static ArrayList<CategoryDiscount> getCategories() {
+        ArrayList<CategoryDiscount> categories = new ArrayList<>();
 
         try {
             String query = "discount(Category, Discount)";
@@ -64,9 +65,7 @@ public class InventoryManagement {
             for (var result: results) {
                 String category = result.get("Category").toString();
                 float discount = result.get("Discount").floatValue();
-                Map<String, Float> categoryMap = new HashMap<>();
-                categoryMap.put(category, discount);
-                categories.add(categoryMap);
+                categories.add(new CategoryDiscount(category,discount));
             }
         } catch (KnowledgeBase.KnowledgeBaseError e) {
             System.out.println(e.getMessage());
@@ -116,13 +115,22 @@ public class InventoryManagement {
         addCategory(category, discount);
     }
 
-    public static void addItem(int id, String name, String category, float price, int stock) {
-        String queryStr = String.format(
-                "assertz(item(%d, '%s', '%s', %f, %d))",
-                id, name, category, price, stock
-        );
+    public static void addItem(String name, String category, float price, int stock) {
+        if (!categoryExists(category)) {
+            System.out.println("Invalid category.");
+            return;
+        }
 
         try {
+            String idQueryStr = "next_item_id(NextID)";
+            var result = KnowledgeBase.fetchQuery(idQueryStr);
+            int id = result.getFirst().get("NextID").intValue();
+
+            String queryStr = String.format(
+                    "assertz(item(%d, '%s', '%s', %f, %d))",
+                    id, name, category, price, stock
+            );
+
             KnowledgeBase.addQuery(queryStr);
             System.out.printf("%s added successfully.\n", name);
         } catch (KnowledgeBase.KnowledgeBaseError e) {
@@ -142,7 +150,33 @@ public class InventoryManagement {
     }
 
     public static void editItem(int id, String name, String category, float price, int stock) {
+        if (!categoryExists(category)) {
+            System.out.println("Invalid category.");
+            return;
+        }
+
         removeItem(id);
-        addItem(id, name, category, price, stock);
+        try {
+            String queryStr = String.format(
+                    "assertz(item(%d, '%s', '%s', %f, %d))",
+                    id, name, category, price, stock
+            );
+
+            KnowledgeBase.addQuery(queryStr);
+            System.out.printf("%s added successfully.\n", name);
+        } catch (KnowledgeBase.KnowledgeBaseError e) {
+            System.out.printf("Failed to add %s\n.", name);
+        }
+    }
+
+    private static boolean categoryExists(String category) {
+       var categories = getCategories();
+
+       for (var cat: categories) {
+           if(category.equalsIgnoreCase(cat.getCategory())) {
+               return true;
+           }
+       }
+       return false;
     }
 }
