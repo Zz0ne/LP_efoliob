@@ -1,6 +1,5 @@
 package Helpers;
 
-import KnowledgeBaseObjects.Item;
 import org.jpl7.*;
 
 import java.util.ArrayList;
@@ -41,16 +40,6 @@ public class KnowledgeBase {
         }
     }
 
-    public static void updateStock(Item item) {
-        String prologQuery = String.format(
-                "update_stock(%d, %d)",
-                item.getId(), item.getQuantity());
-
-        Query updateStock = new Query(prologQuery);
-        if (!updateStock.hasSolution()) {
-            System.out.printf("Failed to update %s stock.\n", item.getName());
-        }
-    }
 
     public static class KnowledgeBaseError extends Exception {
         public KnowledgeBaseError(String message) {

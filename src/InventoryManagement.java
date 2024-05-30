@@ -2,6 +2,7 @@ import Helpers.KnowledgeBase;
 import Helpers.MyScanner;
 import KnowledgeBaseObjects.CategoryDiscount;
 import KnowledgeBaseObjects.Item;
+import org.jpl7.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class InventoryManagement {
             System.out.println("8 - Remove item.");
             System.out.println("9 - Edit item.");
 
+            System.out.print("Choice: ");
             int choice = userInput.nextInt();
 
             switch (choice) {
@@ -270,4 +272,14 @@ public class InventoryManagement {
        return false;
     }
 
+    public static void updateStock(Item item) {
+        String prologQuery = String.format(
+                "update_stock(%d, %d)",
+                item.getId(), item.getQuantity());
+
+        Query updateStock = new Query(prologQuery);
+        if (!updateStock.hasSolution()) {
+            System.out.printf("Failed to update %s stock.\n", item.getName());
+        }
+    }
 }

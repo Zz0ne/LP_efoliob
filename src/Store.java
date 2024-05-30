@@ -29,6 +29,7 @@ public class Store {
 
             switch (choice) {
                 case 0:
+                    userInput.close();
                     System.exit(0);
                 case 1:
                     Client client = getClient();
@@ -164,7 +165,7 @@ public class Store {
             if (choice == 'y') {
                 PurchaseHistory.add(client.getId(), totalItemPrice, categoryDiscount, loyaltyDiscount, shipping, finalPrice);
                 for(Item i: items)
-                    KnowledgeBase.updateStock(i);
+                    InventoryManagement.updateStock(i);
                 break;
             }
             else if (choice == 'n')
