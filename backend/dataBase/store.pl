@@ -1,6 +1,9 @@
 :- dynamic history/7.
 :- dynamic item/5.
 :- dynamic discount/2.
+:- dynamic shipping_cost/2.
+:- dynamic loyalty_discount/2.
+:- dynamic client/4.
 
 update_stock(Id, NewStock) :-
     item(Id, Name, Category, Price, OldStock),
@@ -37,6 +40,15 @@ next_item_id(NextID) :-
     findall(ID, item(ID, _, _, _, _), IDs),
     max_list(IDs, MaxID),
     NextID is MaxID + 1.
+
+next_client_id(NextID) :-
+    findall(ID, client(ID, _, _, _), IDs),
+    max_list(IDs, MaxID),
+    NextID is MaxID + 1.
+
+clients_over_x_loyalty_years(MinYears, Id, Name, District, LoyaltyYears) :-
+   client(Id, Name, District, LoyaltyYears),
+   LoyaltyYears > MinYears.
 
 % Item em inventário
 item(1, 'Potion of Healing', 'potions', 10.0, 50).

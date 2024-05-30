@@ -1,3 +1,4 @@
+import Helpers.*;
 import org.jpl7.Term;
 
 import java.time.LocalDate;
@@ -6,6 +7,62 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class PurchaseHistory {
+    public static void consult(MyScanner userInput) {
+        while (true) {
+            System.out.println("Purchase History:");
+            System.out.println("0 - Go back.");
+            System.out.println("1 - By date.");
+            System.out.println("2 - By client.");
+            System.out.println("3 - By district.");
+            System.out.println("4 - Totals By district.");
+            System.out.println("5 - Totals By date.");
+            System.out.print("Choice: ");
+
+            int choice = userInput.nextInt();
+            System.out.println();
+
+            ArrayList<String> results = new ArrayList<>();
+            switch (choice) {
+                case 0:
+                    return ;
+                case 1:
+                    System.out.print("Enter date(dd/mm/yyyy): ");
+                    String date = userInput.nextLine();
+                    results = PurchaseHistory.getByDate(date);
+                    break;
+                case 2:
+                    System.out.print("Enter client id: ");
+                    int clientId = userInput.nextInt();
+                    results = PurchaseHistory.getByClient(clientId);
+                    break;
+                case 3:
+                    System.out.print("Enter district: ");
+                    String district = userInput.nextLine();
+                    results =  PurchaseHistory.getByDistrict(district);
+                    break;
+                case 4:
+                    System.out.print("Enter district: ");
+                    String districtId = userInput.nextLine();
+                    results.add(PurchaseHistory.getTotalsByDistrict(districtId));
+                    break;
+                case 5:
+                    System.out.print("Enter date(dd/mm/yyyy): ");
+                    String _date = userInput.nextLine();
+                    results.add(PurchaseHistory.getTotalsByDate(_date));
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+                    continue;
+            }
+
+            System.out.println();
+            for (String item : results) {
+                System.out.println(item);
+            }
+            System.out.println();
+        }
+    }
+
     public static void add(int id ,float totalPrice, float catDisc, float loyalDisc, float shipping, float finPrice) {
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -28,13 +85,13 @@ public class PurchaseHistory {
         ArrayList<String> purchaseHistory = new ArrayList<>();
 
         String queryStr = String.format(
-                "history(Client, '%s', Value, CatDisc, LoyalDisc, Shipping, FinPrice)", date
+                "history(KnowledgeBaseObjects.Client, '%s', Value, CatDisc, LoyalDisc, Shipping, FinPrice)", date
         );
 
         try {
             var resp = KnowledgeBase.fetchQuery(queryStr);
             for (var respObj : resp) {
-                int clientId = respObj.get("Client").intValue();
+                int clientId = respObj.get("KnowledgeBaseObjects.Client").intValue();
                 int value = respObj.get("Value").intValue();
                 int catDisc = respObj.get("CatDisc").intValue();
                 int loyalDisc = respObj.get("LoyalDisc").intValue();

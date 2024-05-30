@@ -1,3 +1,7 @@
+package KnowledgeBaseObjects;
+
+import Helpers.ShoppingCart;
+
 public class Client {
 
     private final int id;
@@ -36,5 +40,10 @@ public class Client {
 
     public void addItemToCart(Item item){
         this.cart.addItem(item);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d Name: %s, District: %s, Loyalty: %d", id, name, district, loyaltyYears);
     }
 }

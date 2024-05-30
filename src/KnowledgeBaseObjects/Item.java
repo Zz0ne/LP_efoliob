@@ -1,3 +1,5 @@
+package KnowledgeBaseObjects;
+
 public class Item {
     private final int id;
     private final String name;
@@ -70,12 +72,12 @@ public class Item {
         return String.format("%-3d %-25s %-17s %.2f€  -------- Quantity: %d", id, name, category, price, quantity);    }
 
 
-    // Os métodos abaixo foram criados para esta classe ser usada num hashmap na classe ShoppingCart
+    // Os métodos abaixo foram criados para esta classe ser usada num hashmap na classe Helpers.ShoppingCart
 
     /**
      * Verifica a igualdade entre este item e outro objeto.
      * @param o O objeto com o qual comparar.
-     * @return true se o objeto for um Item com o mesmo id, caso contrário false.
+     * @return true se o objeto for um KnowledgeBaseObjects.Item com o mesmo id, caso contrário false.
      */
     @Override
     public boolean equals(Object o) {

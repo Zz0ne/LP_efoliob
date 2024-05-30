@@ -1,3 +1,5 @@
+package KnowledgeBaseObjects;
+
 public class CategoryDiscount {
     private final String category;
     private final float discount;

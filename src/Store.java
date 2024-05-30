@@ -1,5 +1,10 @@
+import Helpers.KnowledgeBase;
+import Helpers.MyScanner;
+import Helpers.ShoppingCart;
+import KnowledgeBaseObjects.Client;
+import KnowledgeBaseObjects.Item;
+
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Store {
     static ArrayList<Client> clients = null;
@@ -14,9 +19,12 @@ public class Store {
             System.out.println("Welcome:");
             System.out.println("0 - Quit.");
             System.out.println("1 - Purchase Goods.");
-            System.out.println("2 - Purchase History.");
-            System.out.println("3 - Inventory Management.");
+            System.out.println("2 - Consult History.");
+            System.out.println("3 - Manage Inventory.");
+            System.out.println("4 - Manage Costs and Discounts.");
+            System.out.println("5 - Manage Clients.");
 
+            System.out.print("Choice: ");
             int choice = userInput.nextInt();
 
             switch (choice) {
@@ -26,19 +34,23 @@ public class Store {
                     Client client = getClient();
                     browseShop(client);
                     checkout(client);
-                    System.out.println();
                     break;
                 case 2:
-                    fetchHistory();
-                    System.out.println();
+                    PurchaseHistory.consult(userInput);
                     break;
                 case 3:
-                    manageInventory();
-                    System.out.println();
+                    InventoryManagement.manage(userInput);
+                    break;
+                case 4:
+                    CostAndDiscountManagement.manage(userInput);
+                    break;
+                case 5:
+                    ClientManagement.manage(userInput);
                     break;
                 default:
                     System.out.println("Invalid choice");
             }
+            System.out.println();
         }
     }
 
@@ -54,7 +66,7 @@ public class Store {
 
     public static Client selectClient() {
        for (Client c : clients)
-           System.out.println(c.getId() + " " + c.getName());
+           System.out.println(c);
         System.out.print("Select a client: ");
 
        int choice = userInput.nextInt();
@@ -125,7 +137,9 @@ public class Store {
     }
 
     public static void checkout(Client client) {
-        var cart = client.getCart();
+        ShoppingCart cart = client.getCart();
+
+        if (cart.isEmpty()) return;
 
         float totalItemPrice = CartOperations.getTotalCartPrice(cart);
         float categoryDiscount = CartOperations.getCategoryDiscount(cart);
@@ -157,152 +171,6 @@ public class Store {
                 break;
             else
                 System.out.println("Invalid choice");
-        }
-    }
-
-    public static void fetchHistory() {
-
-        while (true) {
-            System.out.println("Purchase History:");
-            System.out.println("0 - Go back.");
-            System.out.println("1 - By date.");
-            System.out.println("2 - By client.");
-            System.out.println("3 - By district.");
-            System.out.println("4 - Totals By district.");
-            System.out.println("5 - Totals By date.");
-            System.out.print("Choice: ");
-
-            int choice = userInput.nextInt();
-            System.out.println();
-
-            ArrayList<String> results = new ArrayList<>();
-            switch (choice) {
-                case 0:
-                    return ;
-                case 1:
-                    System.out.print("Enter date(dd/mm/yyyy): ");
-                    String date = userInput.nextLine();
-                    results = PurchaseHistory.getByDate(date);
-                    break;
-                case 2:
-                    System.out.print("Enter client id: ");
-                    int clientId = userInput.nextInt();
-                    results = PurchaseHistory.getByClient(clientId);
-                    break;
-                case 3:
-                    System.out.print("Enter district: ");
-                    String district = userInput.nextLine();
-                    results =  PurchaseHistory.getByDistrict(district);
-                    break;
-                case 4:
-                    System.out.print("Enter district: ");
-                    String districtId = userInput.nextLine();
-                    results.add(PurchaseHistory.getTotalsByDistrict(districtId));
-                    break;
-                case 5:
-                    System.out.print("Enter date(dd/mm/yyyy): ");
-                    String _date = userInput.nextLine();
-                    results.add(PurchaseHistory.getTotalsByDate(_date));
-                    break;
-                default:
-                    System.out.println("Invalid choice");
-                    continue;
-            }
-
-            System.out.println();
-            for (String item : results) {
-                System.out.println(item);
-            }
-            System.out.println();
-        }
-    }
-
-    public static void manageInventory() {
-
-        while (true) {
-            System.out.println("InventoryManagement:");
-            System.out.println("0 - Go back.");
-            System.out.println("1 - Check items.");
-            System.out.println("2 - Check items by category.");
-            System.out.println("3 - Check categories.");
-            System.out.println("4 - Add category.");
-            System.out.println("5 - Remove category.");
-            System.out.println("6 - Edit category.");
-            System.out.println("7 - Add item.");
-            System.out.println("8 - Remove item.");
-            System.out.println("9 - Edit item.");
-
-            int choice = userInput.nextInt();
-
-            switch (choice) {
-                case 0:
-                    return;
-                case 1:
-                    var itemList = InventoryManagement.getItems();
-                    for (var item : itemList)
-                        System.out.println(item);
-                    break;
-                case 2:
-                    System.out.print("Insert category: ");
-                    String category = userInput.nextLine();
-                    var itemByCatList = InventoryManagement.getItemsByCategory(category);
-                    for (Item item : itemByCatList)
-                        System.out.println(item);
-                    break;
-                case 3:
-                    var categoryList = InventoryManagement.getCategories();
-                    for (var cat : categoryList)
-                        System.out.println(cat);
-                    break;
-                case 4:
-                    System.out.print("Enter new category name: ");
-                    String catName = userInput.nextLine();
-                    System.out.print("Enter category discount: ");
-                    float discount = userInput.nextFloat();
-                    InventoryManagement.addCategory(catName, discount);
-                    break;
-                case 5:
-                    System.out.print("Enter category to remove: ");
-                    String removeCatName = userInput.nextLine();
-                    InventoryManagement.removeCategory(removeCatName);
-                    break;
-                case 6:
-                    System.out.print("Enter category name: ");
-                    String catToEdit = userInput.nextLine();
-                    System.out.print("Enter new discount: ");
-                    float newDiscount = userInput.nextFloat();
-                    InventoryManagement.editCategory(catToEdit, newDiscount);
-                    break;
-                case 7:
-                    System.out.print("Enter Item name: ");
-                    String itemName = userInput.nextLine();
-                    System.out.print("Enter category: ");
-                    String itemCategory = userInput.nextLine();
-                    System.out.print("Enter price: ");
-                    float itemPrice = userInput.nextFloat();
-                    System.out.print("Enter quantity: ");
-                    int quantity = userInput.nextInt();
-                    InventoryManagement.addItem(itemName, itemCategory, itemPrice, quantity);
-                    break;
-                case 8:
-                    System.out.print("Enter item id: ");
-                    int itemToRemove = userInput.nextInt();
-                    InventoryManagement.removeItem(itemToRemove);
-                    break;
-                case 9:
-                    System.out.print("Enter item id: ");
-                    int idToEdit = userInput.nextInt();
-                    System.out.print("Enter item name: ");
-                    String newName = userInput.nextLine();
-                    System.out.print("Enter category: ");
-                    String newCategory = userInput.nextLine();
-                    System.out.print("Enter price: ");
-                    float newPrice = userInput.nextFloat();
-                    System.out.print("Enter Stock: ");
-                    int newStock = userInput.nextInt();
-                    InventoryManagement.editItem(idToEdit, newName, newCategory, newPrice, newStock);
-                    break;
-            }
         }
     }
 }

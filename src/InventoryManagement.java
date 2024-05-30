@@ -1,11 +1,115 @@
-import jdk.jfr.Category;
-import org.jpl7.Term;
+import Helpers.KnowledgeBase;
+import Helpers.MyScanner;
+import KnowledgeBaseObjects.CategoryDiscount;
+import KnowledgeBaseObjects.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryManagement {
+    public static void manage(MyScanner userInput) {
+
+        while (true) {
+            System.out.println("InventoryManagement:");
+            System.out.println("0 - Go back.");
+            System.out.println("1 - Check items.");
+            System.out.println("2 - Check items by category.");
+            System.out.println("3 - Check categories.");
+            System.out.println("4 - Add category.");
+            System.out.println("5 - Remove category.");
+            System.out.println("6 - Edit category.");
+            System.out.println("7 - Add item.");
+            System.out.println("8 - Remove item.");
+            System.out.println("9 - Edit item.");
+
+            int choice = userInput.nextInt();
+
+            switch (choice) {
+                case 0:
+                    return;
+                case 1:
+                    var itemList = InventoryManagement.getItems();
+                    System.out.println("Items:");
+                    for (var item : itemList)
+                        System.out.println(item);
+                    System.out.println();
+                    break;
+                case 2:
+                    System.out.print("Insert category: ");
+                    String category = userInput.nextLine();
+                    var itemByCatList = InventoryManagement.getItemsByCategory(category);
+                    System.out.println("Items:");
+                    for (Item item : itemByCatList)
+                        System.out.println(item);
+                    System.out.println();
+                    break;
+                case 3:
+                    var categoryList = InventoryManagement.getCategories();
+                    System.out.println("Categories:");
+                    for (var cat : categoryList)
+                        System.out.println(cat);
+                    System.out.println();
+                    break;
+                case 4:
+                    System.out.print("Enter new category name: ");
+                    String catName = userInput.nextLine();
+                    System.out.print("Enter category discount: ");
+                    float discount = userInput.nextFloat();
+                    if (discount == -1) break;
+                    InventoryManagement.addCategory(catName, discount);
+                    break;
+                case 5:
+                    System.out.print("Enter category to remove: ");
+                    String removeCatName = userInput.nextLine();
+                    InventoryManagement.removeCategory(removeCatName);
+                    break;
+                case 6:
+                    System.out.print("Enter category name: ");
+                    String catToEdit = userInput.nextLine();
+                    System.out.print("Enter new discount: ");
+                    float newDiscount = userInput.nextFloat();
+                    if (newDiscount == -1) break;
+                    InventoryManagement.editCategory(catToEdit, newDiscount);
+                    break;
+                case 7:
+                    System.out.print("Enter item name: ");
+                    String itemName = userInput.nextLine();
+                    System.out.print("Enter category: ");
+                    String itemCategory = userInput.nextLine();
+                    System.out.print("Enter price: ");
+                    float itemPrice = userInput.nextFloat();
+                    if (itemPrice == -1) break;
+                    System.out.print("Enter quantity: ");
+                    int quantity = userInput.nextInt();
+                    InventoryManagement.addItem(itemName, itemCategory, itemPrice, quantity);
+                    break;
+                case 8:
+                    System.out.print("Enter item id: ");
+                    int itemToRemove = userInput.nextInt();
+                    InventoryManagement.removeItem(itemToRemove);
+                    break;
+                case 9:
+                    System.out.print("Enter item id: ");
+                    int idToEdit = userInput.nextInt();
+                    System.out.print("Enter item name: ");
+                    String newName = userInput.nextLine();
+                    System.out.print("Enter category: ");
+                    String newCategory = userInput.nextLine();
+                    System.out.print("Enter price: ");
+                    float newPrice = userInput.nextFloat();
+                    if (newPrice== -1) break;
+                    System.out.print("Enter Stock: ");
+                    int newStock = userInput.nextInt();
+                    InventoryManagement.editItem(idToEdit, newName, newCategory, newPrice, newStock);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+            }
+            System.out.println();
+        }
+    }
+
     public static ArrayList<Item> getItems() {
         ArrayList<Item> items = new ArrayList<>();
 
@@ -56,21 +160,7 @@ public class InventoryManagement {
     }
 
     public static ArrayList<CategoryDiscount> getCategories() {
-        ArrayList<CategoryDiscount> categories = new ArrayList<>();
-
-        try {
-            String query = "discount(Category, Discount)";
-            var results = KnowledgeBase.fetchQuery(query);
-
-            for (var result: results) {
-                String category = result.get("Category").toString();
-                float discount = result.get("Discount").floatValue();
-                categories.add(new CategoryDiscount(category,discount));
-            }
-        } catch (KnowledgeBase.KnowledgeBaseError e) {
-            System.out.println(e.getMessage());
-        }
-        return categories;
+        return CostAndDiscountManagement.getCategoryDiscounts();
     }
 
     public static Map<String, Float> getCategory(String category) {
@@ -163,9 +253,9 @@ public class InventoryManagement {
             );
 
             KnowledgeBase.addQuery(queryStr);
-            System.out.printf("%s added successfully.\n", name);
+            System.out.printf("%s edited successfully.\n", name);
         } catch (KnowledgeBase.KnowledgeBaseError e) {
-            System.out.printf("Failed to add %s\n.", name);
+            System.out.printf("Failed to edit %s\n.", name);
         }
     }
 
@@ -179,4 +269,5 @@ public class InventoryManagement {
        }
        return false;
     }
+
 }

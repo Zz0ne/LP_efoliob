@@ -49,6 +49,6 @@ let parse_shipping_cost line =
 (*   let shipping_costs = List.filter_map parse_shipping_cost file_lines in *)
 (*   (* Print the parsed information *) *)
 (*   List.iter (fun (category, discount) -> Printf.printf "Discount for category %s: %f\n" category discount) discounts; *)
-(*   List.iter (fun (id, name, category, price, quantity) -> Printf.printf "Item: %d, %s, %s, %f, %d\n" id name category price quantity) items; *)
+(*   List.iter (fun (id, name, category, price, quantity) -> Printf.printf "KnowledgeBaseObjects.Item: %d, %s, %s, %f, %d\n" id name category price quantity) items; *)
 (*   List.iter (fun (years, discount) -> Printf.printf "Loyalty discount for %s year(s): %f\n" years discount) loyalty_discounts; *)
 (*   List.iter (fun (district, cost) -> Printf.printf "Shipping cost to district %s: %f\n" district cost) shipping_costs *)

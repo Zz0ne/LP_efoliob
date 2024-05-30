@@ -1,3 +1,7 @@
+package Helpers;
+
+import KnowledgeBaseObjects.Item;
+
 import java.util.ArrayList;
 
 public class ShoppingCart {
@@ -23,6 +27,10 @@ public class ShoppingCart {
 
     public ArrayList<Item> getItems() {
        return items;
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
     }
 
     /**
