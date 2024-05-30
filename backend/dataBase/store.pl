@@ -5,27 +5,32 @@
 :- dynamic loyalty_discount/2.
 :- dynamic client/4.
 
+% Atualiza o stock de um item dado o seu ID e o novo valor de stock
 update_stock(Id, NewStock) :-
     item(Id, Name, Category, Price, OldStock),
     retract(item(Id, Name, Category, Price, OldStock)),
     assertz(item(Id, Name, Category, Price, NewStock)).
 
+% Obtém o histórico de compras por distrito, retornando os detalhes da compra
 purchase_history_by_district(District, ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) :-
     client(ClientId, _ClientName, District, _LoyaltyYears),
     history(ClientId, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice).
 
+% Calcula os totais do histórico de compras por distrito
 purchase_history_totals_by_district(District, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
     findall((TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
             purchase_history_by_district(District, _ClientId, _Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
             Results),
     sum_values(Results, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum).
 
+% Calcula os totais do histórico de compras por data
 purchase_history_totals_by_date(Date, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
     findall((TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
             history(_, Date, TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice),
             Results),
     sum_values(Results, TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum).
 
+% Soma os valores de uma lista de resultados
 sum_values([], 0, 0, 0, 0, 0).
 sum_values([(TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) | Tail],
            TotalSum, CatDiscSum, LoyalDiscSum, ShippingSum, FinPriceSum) :-
@@ -36,16 +41,19 @@ sum_values([(TotalPrice, CatDisc, LoyalDisc, Shipping, FinPrice) | Tail],
     ShippingSum is ShippingSumRest + Shipping,
     FinPriceSum is FinPriceSumRest + FinPrice.
 
+% Obtém o próximo ID de item disponível
 next_item_id(NextID) :-
     findall(ID, item(ID, _, _, _, _), IDs),
     max_list(IDs, MaxID),
     NextID is MaxID + 1.
 
+% Obtém o próximo ID de cliente disponível
 next_client_id(NextID) :-
     findall(ID, client(ID, _, _, _), IDs),
     max_list(IDs, MaxID),
     NextID is MaxID + 1.
 
+% Obtém os clientes com mais de um certo número de anos de lealdade
 clients_over_x_loyalty_years(MinYears, Id, Name, District, LoyaltyYears) :-
    client(Id, Name, District, LoyaltyYears),
    LoyaltyYears > MinYears.
